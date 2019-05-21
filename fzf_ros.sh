@@ -2,7 +2,7 @@
 # Constants
 if [ -n "$FZF_ROSBAG_PLAY_COMMAND" ];
 then
-    echo "FZF_ROS: using existing rosbag play command."
+    
 else
     # Change this if you want your own rosbag play command
     export FZF_ROSBAG_PLAY_COMMAND="rosbag play --pause --clock --hz=200 "
@@ -10,7 +10,7 @@ fi
 
 if [ -n "$FZF_ROSBAG_DIRS" ];
 then
-    echo "FZF_ROS: using existing rosbag directories."
+
 else
     # Change this if you want your own rosbag play command
     export FZF_ROSBAG_DIRS="$HOME"
