@@ -16,30 +16,35 @@ else
     export FZF_ROSBAG_DIRS="$HOME"
 fi
 
+# utility function used to write the command in the shell
+writecmd() {
+  perl -e '$TIOCSTI = 0x5412; $l = <STDIN>; $lc = $ARGV[0] eq "-run" ? "\n" : ""; $l =~ s/\s*$/$lc/; map { ioctl STDOUT, $TIOCSTI, $_; } split "", $l;' -- $1
+}
+
 #==============================================================================
 # General ros tools
 
 ## roscd
-rcd() {
+fzf_roscd() {
     local package
     package=$(rospack list-names | fzf-tmux --query="$1" --select-1 --exit-0) &&
         roscd "$package"
 }
 
 ## roslaunch
-rlaunch() {
+fzf_roslaunch() {
    find $ROS_DIR_PATH -type f -name "*.launch" | fzf-tmux --query="$1" --select-1 --exit-0 |\
         sed "s/^/roslaunch  /" | writecmd
 }
 
 ## rosbag play
-rbag() {
+fzf_rosbag() {
    find $FZF_ROSBAG_DIRS -type f -name "*.bag" | fzf-tmux --query="$1" --select-1 --exit-0 |\
         sed "s/^/\$FZF_ROSBAG_PLAY_COMMAND/" | writecmd
 }
 
 ## Run executables like rosrun (but not really rosrun)
-rrun() {
+fzf_rosrun() {
    find $ROS_DIR_PATH/devel/ $ROS_DIR_PATH/src/ -executable -type f | fzf-tmux --query="$1" --select-1 --exit-0 |\
         sed "s/^//" | writecmd
 }
@@ -47,14 +52,14 @@ rrun() {
 #==============================================================================
 # Topic related tools
 ## Echo a topic
-rte() {
+fzf_ros_topic_echo() {
     rostopic list > /dev/null &&
         rostopic list | fzf-tmux --query="$1" --select-1 --exit-0 |\
         sed "s/^/rostopic echo /" | writecmd
 }
 
 ## Topic info
-rtinfo() {
+fzf_ros_topic_info() {
     local topic
     rostopic list > /dev/null &&
         topic=$(rostopic list | fzf-tmux --query="$1" --select-1 --exit-0) &&
@@ -64,7 +69,7 @@ rtinfo() {
 #==============================================================================
 # Node related tools
 ## Node info
-rninfo() {
+fzf_ros_node_info() {
     local node
     rostopic list > /dev/null
         node=$(rosnode list | fzf-tmux --query="$1" --select-1 --exit-0) &&
@@ -72,7 +77,7 @@ rninfo() {
 }
 
 ## Ping nodes
-rnping() {
+fzf_ros_node_ping() {
     local node
     rostopic list > /dev/null &&
         node=$(rosnode list | fzf-tmux --query="$1" --select-1 --exit-0) &&
@@ -80,7 +85,7 @@ rnping() {
 }
 
 ## Kill nodes
-rnkill() {
+fzf_ros_node_kill() {
     local node
     rostopic list > /dev/null &&
         node=$(rosnode list | fzf-tmux --query="$1" --select-1 --exit-0) &&
@@ -90,7 +95,7 @@ rnkill() {
 #==============================================================================
 # Build tools
 ## Build a package - start immediately on match
-rb() {
+fzf_catkin_build_immediate() {
     local package
     package=$(rospack list-names | fzf-tmux --query="$1" --select-1 --exit-0) &&
         catkin build -w $ROS_DIR_PATH -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "$package"
@@ -98,13 +103,13 @@ rb() {
 
 ## Build a package - prepare build command on command line for the user to
 #  edit before starting a build
-rbld() {
+fzf_catkin_build_edit() {
     rospack list-names  | fzf-tmux --query="$1" --select-1 --exit-0 |\
         sed "s/^/catkin build -w \$ROS_DIR_PATH -DCMAKE_EXPORT_COMPILE_COMMANDS=ON  /" | writecmd
 }
 
 ## Clean packages
-rclean() {
+fzf_ros_clean() {
     local package
     package=$(rospack list-names | fzf-tmux --query="$1" --select-1 --exit-0)
     local rclean_build_path=$ROS_DIR_PATH/build/$package
