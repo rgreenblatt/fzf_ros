@@ -63,7 +63,7 @@ fzf_ros_topic_info() {
     local topic
     rostopic list > /dev/null &&
         topic=$(rostopic list | fzf-tmux --query="$1" --select-1 --exit-0) &&
-        rosnode info "$topic"
+        rostopic info "$topic"
 }
 
 #==============================================================================
