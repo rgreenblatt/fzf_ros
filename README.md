@@ -16,7 +16,6 @@ You need the following to use all the functions:
 ## Usage
 After installing FZF, add the following line to your `~/.bashrc` to source the file:
 ```
-source /path/to/fzf_base.sh
 source /path/to/fzf_ros.sh
 ```
 
@@ -30,7 +29,6 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 git clone --depth 1 https://github.com/shivaghose/fzf_ros.git ~/.fzf_ros
 
 # Add the following lines to your .bashrc
-source ~/.fzf_ros/fzf_base.sh
 source ~/.fzf_ros/fzf_ros.sh
 
 ```
