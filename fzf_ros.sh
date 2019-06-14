@@ -1,17 +1,13 @@
 #==============================================================================
 # Constants
-if [ -n "$FZF_ROSBAG_PLAY_COMMAND" ];
+if [ -z "$FZF_ROSBAG_PLAY_COMMAND" ];
 then
-    
-else
     # Change this if you want your own rosbag play command
     export FZF_ROSBAG_PLAY_COMMAND="rosbag play --pause --clock --hz=200 "
 fi
 
-if [ -n "$FZF_ROSBAG_DIRS" ];
+if [ -z "$FZF_ROSBAG_DIRS" ];
 then
-
-else
     # Change this if you want your own rosbag play command
     export FZF_ROSBAG_DIRS="$HOME"
 fi
